@@ -24,7 +24,9 @@ public class VKWrapper {
     }
 
     void login() {
-        VKSdk.login(activity, "groups");
+        if (!VKSdk.isLoggedIn()) {
+            VKSdk.login(activity, "groups");
+        }
     }
 
     void listGroups() {
