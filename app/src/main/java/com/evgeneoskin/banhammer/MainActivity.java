@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
@@ -13,12 +15,23 @@ import android.view.MenuItem;
 
 import com.evgeneoskin.banhammer.config.Module;
 import com.evgeneoskin.banhammer.vk.VKWrapper;
+import com.evgeneoskin.banhammer.vk.models.Group;
+import com.evgeneoskin.banhammer.vk.models.Items;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
+import java.util.Observer;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
     VKWrapper vk;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private GroupAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +42,15 @@ public class MainActivity extends AppCompatActivity {
         vk = injector.getInstance(VKWrapper.class);
 
         setContentView(R.layout.activity_main);
+
+        recyclerView = (RecyclerView) findViewById(R.id.groups_view);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new GroupAdapter();
+        recyclerView.setAdapter(adapter);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -45,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         this.vk.login();
+        this.pupolateGroups();
         super.onStart();
     }
 
@@ -70,5 +93,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void pupolateGroups() {
+        vk.listGroups()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Items<Group>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Snackbar.make(
+                                recyclerView, R.string.list_group_error, Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+
+                    @Override
+                    public void onNext(Items<Group> groups) {
+                        adapter.setGroups(groups.items);
+                    }
+                });
     }
 }

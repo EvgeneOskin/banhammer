@@ -3,14 +3,22 @@ package com.evgeneoskin.banhammer.vk.models;
 import java.util.List;
 
 public class Group {
-    public long id;
-    public String name;
-    public String screen_name;
-    public int is_closed;
-    public int type;
-    public int is_admin;
-    public int is_member;
-    public String photo_50;
-    public String photo_100;
-    public String photo_200;
+    long id;
+    String name;
+    String screen_name;
+    int is_closed;
+    int type;
+    int is_admin;
+    int is_member;
+    String photo_50;
+    String photo_100;
+    String photo_200;
+
+    public boolean isAdmin() {
+        return is_admin == 1;
+    }
+
+    public String getName() {
+        return name;
+    }
 }
