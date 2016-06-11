@@ -1,10 +1,11 @@
 package com.evgeneoskin.banhammer;
 
-import android.graphics.drawable.Drawable;
-
+import com.evgeneoskin.banhammer.config.AppModule;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
+
+import roboguice.RoboGuice;
 
 public class Application extends android.app.Application {
 
@@ -20,6 +21,10 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        RoboGuice.getOrCreateBaseApplicationInjector(this, RoboGuice.DEFAULT_STAGE,
+                RoboGuice.newDefaultRoboModule(this), new AppModule());
+
         vkAccessTokenTracker.startTracking();
         VKSdk.initialize(this);
     }

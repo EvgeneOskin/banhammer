@@ -3,11 +3,11 @@ package com.evgeneoskin.banhammer.json;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 
-public class GSONSerializer implements Serializer {
+public class GSONSerializer implements JSONSerializer {
     Gson gson;
 
     @Inject
-    public GSONSerializer () {
+    public GSONSerializer() {
         gson = new Gson();
     }
 

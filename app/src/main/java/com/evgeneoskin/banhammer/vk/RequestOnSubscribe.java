@@ -1,8 +1,5 @@
 package com.evgeneoskin.banhammer.vk;
 
-import com.evgeneoskin.banhammer.vk.models.Group;
-import com.evgeneoskin.banhammer.vk.models.Items;
-import com.google.common.base.Throwables;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;

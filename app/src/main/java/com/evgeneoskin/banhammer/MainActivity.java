@@ -18,15 +18,17 @@ import com.evgeneoskin.banhammer.vk.VK;
 import com.evgeneoskin.banhammer.vk.models.Group;
 import com.evgeneoskin.banhammer.vk.models.Items;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 
+import roboguice.RoboGuice;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    VK vk;
+    @Inject VK vk;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private GroupAdapter adapter;
@@ -34,8 +36,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Injector injector = Guice.createInjector(new AppModule(this));
+        Injector injector = RoboGuice.getInjector(this.getApplicationContext());
         vk = injector.getInstance(VK.class);
 
         setContentView(R.layout.activity_main);
@@ -63,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStart() {
-        this.vk.login();
-        this.pupolateGroups();
+        vk.login(this);
+        this.populateGroups();
         super.onStart();
     }
 
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void pupolateGroups() {
+    public void populateGroups() {
         vk.listGroups()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())

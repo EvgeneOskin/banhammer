@@ -2,9 +2,8 @@ package com.evgeneoskin.banhammer.vk;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 
-import com.evgeneoskin.banhammer.json.Serializer;
+import com.evgeneoskin.banhammer.json.JSONSerializer;
 import com.evgeneoskin.banhammer.vk.models.GroupItems;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -22,19 +21,14 @@ import rx.functions.Func1;
 
 public class VKWrapper implements VK {
 
-    private final Activity activity;
-    private final Serializer serializer;
-    private final String scope;
+    @Inject
+    JSONSerializer JSONSerializer;
 
     @Inject
-    VKWrapper(@NonNull Activity activity, @NonNull Serializer serializer,
-              @Named("vk scope") String scope) {
-        this.serializer = serializer;
-        this.activity = activity;
-        this.scope = scope;
-    }
+    @Named("vk scope")
+    String scope;
 
-    public void login() {
+    public void login(Activity activity) {
         if (!VKSdk.isLoggedIn()) {
             VKSdk.login(activity, this.scope);
         }
@@ -47,7 +41,7 @@ public class VKWrapper implements VK {
 
             @Override
             public GroupItems call (VKResponse response){
-                return serializer.serialize(
+                return JSONSerializer.serialize(
                         response.responseString, GroupItems.class
                 );
             }
