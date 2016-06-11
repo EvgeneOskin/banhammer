@@ -1,9 +1,14 @@
-package com.evgeneoskin.banhammer;
+package com.evgeneoskin.banhammer.vk;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 
+import com.evgeneoskin.banhammer.json.GSONSerializer;
+import com.evgeneoskin.banhammer.json.JSONSerializer;
+import com.evgeneoskin.banhammer.vk.models.Group;
+import com.evgeneoskin.banhammer.vk.models.ResponseGroupItems;
+import com.evgeneoskin.banhammer.vk.rx.FuncResponseDeserialize;
+import com.evgeneoskin.banhammer.vk.rx.ItemsRetriever;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
@@ -11,41 +16,29 @@ import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
-import com.vk.sdk.api.VKResponse;
 
 import java.util.List;
 
-public class VKWrapper {
+import rx.Observable;
 
-    private final Activity activity;
+public class VKWrapper implements VK {
 
-    VKWrapper(@NonNull Activity activity) {
-        this.activity = activity;
-    }
+    JSONSerializer serializer = new GSONSerializer();
+    String scope = "groups";
 
-    void login() {
+    public void login(Activity activity) {
         if (!VKSdk.isLoggedIn()) {
-            VKSdk.login(activity, "groups");
+            VKSdk.login(activity, this.scope);
         }
     }
 
-    void listGroups() {
-        VKParameters parameters = new VKParameters();
-        VKRequest request = VKApi.groups().get(parameters);
-        request.executeWithListener(new VKRequest.VKRequestListener() {
-            @Override
-            public void onComplete(VKResponse response) {
-                //Do complete stuff
-            }
-            @Override
-            public void onError(VKError error) {
-                //Do error stuff
-            }
-            @Override
-            public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
-                //I don't really believe in progress
-            }
-        });
+    public Observable<List<Group>> listGroups() {
+        final VKParameters parameters = new VKParameters();
+        parameters.put("extended", 1);
+        final VKRequest request = VKApi.groups().get(parameters);
+        return Observable.create(new RequestOnSubscribe(request))
+                .map(new FuncResponseDeserialize(serializer, ResponseGroupItems.class))
+                .map(new ItemsRetriever<Group>());
     }
 
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -59,7 +52,7 @@ public class VKWrapper {
                     public void onError(VKError error) {
                         // Произошла ошибка авторизации (например, пользователь запретил авторизацию)
                     }
-            }
+                }
         );
         return handled;
     }

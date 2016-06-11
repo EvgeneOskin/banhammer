@@ -1,7 +1,5 @@
 package com.evgeneoskin.banhammer;
 
-import android.graphics.drawable.Drawable;
-
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
