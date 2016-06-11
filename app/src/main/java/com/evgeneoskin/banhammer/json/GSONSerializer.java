@@ -1,12 +1,10 @@
 package com.evgeneoskin.banhammer.json;
 
 import com.google.gson.Gson;
-import com.google.inject.Inject;
 
 public class GSONSerializer implements JSONSerializer {
     Gson gson;
 
-    @Inject
     public GSONSerializer() {
         gson = new Gson();
     }

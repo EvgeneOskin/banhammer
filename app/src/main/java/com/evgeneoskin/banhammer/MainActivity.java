@@ -13,22 +13,19 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.evgeneoskin.banhammer.config.AppModule;
 import com.evgeneoskin.banhammer.vk.VK;
+import com.evgeneoskin.banhammer.vk.VKWrapper;
 import com.evgeneoskin.banhammer.vk.models.Group;
-import com.evgeneoskin.banhammer.vk.models.Items;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 
-import roboguice.RoboGuice;
+import java.util.List;
+
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    @Inject VK vk;
+    private VK vk;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private GroupAdapter adapter;
@@ -36,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Injector injector = RoboGuice.getInjector(this.getApplicationContext());
-        vk = injector.getInstance(VK.class);
+        vk = new VKWrapper();
 
         setContentView(R.layout.activity_main);
 
@@ -97,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         vk.listGroups()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Items<Group>>() {
+                .subscribe(new Subscriber<List<Group>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -110,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNext(Items<Group> groups) {
-                        adapter.setGroups(groups.items);
+                    public void onNext(List<Group> groups) {
+                        adapter.setGroups(groups);
                     }
                 });
     }

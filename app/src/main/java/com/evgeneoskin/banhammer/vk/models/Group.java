@@ -7,7 +7,7 @@ public class Group {
     String name;
     String screen_name;
     int is_closed;
-    int type;
+    String type;
     int is_admin;
     int is_member;
     String photo_50;
