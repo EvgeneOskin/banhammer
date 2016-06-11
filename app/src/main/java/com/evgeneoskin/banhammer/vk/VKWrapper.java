@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import com.evgeneoskin.banhammer.json.Serializer;
 import com.evgeneoskin.banhammer.vk.models.GroupItems;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
@@ -19,20 +20,23 @@ import com.vk.sdk.api.VKResponse;
 import rx.Observable;
 import rx.functions.Func1;
 
-public class VKWrapper {
+public class VKWrapper implements VK {
 
     private final Activity activity;
     private final Serializer serializer;
+    private final String scope;
 
     @Inject
-    VKWrapper(@NonNull Activity activity, @NonNull Serializer serializer) {
+    VKWrapper(@NonNull Activity activity, @NonNull Serializer serializer,
+              @Named("vk scope") String scope) {
         this.serializer = serializer;
         this.activity = activity;
+        this.scope = scope;
     }
 
     public void login() {
         if (!VKSdk.isLoggedIn()) {
-            VKSdk.login(activity, "groups");
+            VKSdk.login(activity, this.scope);
         }
     }
 

@@ -13,14 +13,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.evgeneoskin.banhammer.config.Module;
-import com.evgeneoskin.banhammer.vk.VKWrapper;
+import com.evgeneoskin.banhammer.config.AppModule;
+import com.evgeneoskin.banhammer.vk.VK;
 import com.evgeneoskin.banhammer.vk.models.Group;
 import com.evgeneoskin.banhammer.vk.models.Items;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import java.util.Observer;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,7 +26,7 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    VKWrapper vk;
+    VK vk;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private GroupAdapter adapter;
@@ -37,9 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        Injector injector = Guice.createInjector(new Module(this));
-        vk = injector.getInstance(VKWrapper.class);
+        Injector injector = Guice.createInjector(new AppModule(this));
+        vk = injector.getInstance(VK.class);
 
         setContentView(R.layout.activity_main);
 
