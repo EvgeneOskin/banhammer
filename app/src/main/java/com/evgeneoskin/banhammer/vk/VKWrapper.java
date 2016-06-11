@@ -1,9 +1,12 @@
-package com.evgeneoskin.banhammer;
+package com.evgeneoskin.banhammer.vk;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
+import com.evgeneoskin.banhammer.json.Serializer;
+import com.evgeneoskin.banhammer.vk.models.GroupItems;
+import com.google.inject.Inject;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKCallback;
 import com.vk.sdk.VKSdk;
@@ -13,37 +16,36 @@ import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 
-import java.util.List;
+import rx.Observable;
+import rx.functions.Func1;
 
 public class VKWrapper {
 
     private final Activity activity;
+    private final Serializer serializer;
 
-    VKWrapper(@NonNull Activity activity) {
+    @Inject
+    VKWrapper(@NonNull Activity activity, @NonNull Serializer serializer) {
+        this.serializer = serializer;
         this.activity = activity;
     }
 
-    void login() {
+    public void login() {
         if (!VKSdk.isLoggedIn()) {
             VKSdk.login(activity, "groups");
         }
     }
 
-    void listGroups() {
-        VKParameters parameters = new VKParameters();
-        VKRequest request = VKApi.groups().get(parameters);
-        request.executeWithListener(new VKRequest.VKRequestListener() {
+    public Observable<GroupItems> listGroups() {
+        final VKParameters parameters = new VKParameters();
+        final VKRequest request = VKApi.groups().get(parameters);
+        return Observable.create(new RequestOnSubscribe(request)).map(new Func1<VKResponse, GroupItems>() {
+
             @Override
-            public void onComplete(VKResponse response) {
-                //Do complete stuff
-            }
-            @Override
-            public void onError(VKError error) {
-                //Do error stuff
-            }
-            @Override
-            public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
-                //I don't really believe in progress
+            public GroupItems call (VKResponse response){
+                return serializer.serialize(
+                        response.responseString, GroupItems.class
+                );
             }
         });
     }
@@ -59,7 +61,7 @@ public class VKWrapper {
                     public void onError(VKError error) {
                         // Произошла ошибка авторизации (например, пользователь запретил авторизацию)
                     }
-            }
+                }
         );
         return handled;
     }
