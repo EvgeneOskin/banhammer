@@ -23,7 +23,7 @@ import java.util.List;
 
 import rx.Observable;
 
-public class VKWrapper implements VK {
+public class VKImpl implements VK {
 
     JSONSerializer serializer = new GSONSerializer();
     String scope = "groups";
@@ -37,6 +37,7 @@ public class VKWrapper implements VK {
     public Observable<List<Group>> listGroups() {
         final VKParameters parameters = new VKParameters();
         parameters.put("extended", 1);
+        parameters.put("filter", "moder");
         final VKRequest request = VKApi.groups().get(parameters);
         return Observable.create(new RequestOnSubscribe(request))
                 .map(new FuncResponseDeserialize(serializer, ResponseGroupItems.class))
