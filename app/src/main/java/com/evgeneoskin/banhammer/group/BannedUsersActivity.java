@@ -2,11 +2,13 @@ package com.evgeneoskin.banhammer.group;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.evgeneoskin.banhammer.R;
 import com.evgeneoskin.banhammer.vk.VK;
@@ -38,7 +40,7 @@ public class BannedUsersActivity extends AppCompatActivity {
         Intent intent = getIntent();
         group = Parcels.unwrap(intent.getParcelableExtra("group"));
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_banned_users);
 
         recyclerView = (RecyclerView) findViewById(R.id.items_view);
         layoutManager = new LinearLayoutManager(this);
@@ -48,6 +50,15 @@ public class BannedUsersActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Ban user", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
     }
 
     @Override

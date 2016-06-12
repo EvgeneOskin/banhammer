@@ -32,7 +32,7 @@ public class GroupsActivity extends AppCompatActivity {
 
         vk = new VKImpl();
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_groups);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
