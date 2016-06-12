@@ -3,7 +3,7 @@ package com.evgeneoskin.banhammer.vk.models;
 import java.util.List;
 
 public class Group {
-    long id;
+    public long id;
     String name;
     String screen_name;
     int is_closed;

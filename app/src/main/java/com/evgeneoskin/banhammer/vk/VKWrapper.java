@@ -5,7 +5,9 @@ import android.content.Intent;
 
 import com.evgeneoskin.banhammer.json.GSONSerializer;
 import com.evgeneoskin.banhammer.json.JSONSerializer;
+import com.evgeneoskin.banhammer.vk.models.BannedUser;
 import com.evgeneoskin.banhammer.vk.models.Group;
+import com.evgeneoskin.banhammer.vk.models.ResponseBannedItems;
 import com.evgeneoskin.banhammer.vk.models.ResponseGroupItems;
 import com.evgeneoskin.banhammer.vk.rx.FuncResponseDeserialize;
 import com.evgeneoskin.banhammer.vk.rx.ItemsRetriever;
@@ -39,6 +41,15 @@ public class VKWrapper implements VK {
         return Observable.create(new RequestOnSubscribe(request))
                 .map(new FuncResponseDeserialize(serializer, ResponseGroupItems.class))
                 .map(new ItemsRetriever<Group>());
+    }
+
+    public Observable<List<BannedUser>> listBannedUsers(Group group) {
+        final VKParameters parameters = new VKParameters();
+        parameters.put("group_id", group.id);
+        final VKRequest request = VKApi.groups().getBanned(parameters);
+        return Observable.create(new RequestOnSubscribe(request))
+                .map(new FuncResponseDeserialize(serializer, ResponseBannedItems.class))
+                .map(new ItemsRetriever<BannedUser>());
     }
 
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {

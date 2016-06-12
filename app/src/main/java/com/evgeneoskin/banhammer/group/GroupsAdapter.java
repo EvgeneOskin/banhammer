@@ -28,11 +28,13 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
     public void onBindViewHolder(GroupsAdapter.ViewHolder holder, int position) {
         Group group = items.get(position);
         holder.nameView.setText(group.getName());
+        int iconResource;
         if (group.isAdmin()) {
-            holder.adminView.setImageResource(android.R.drawable.ic_dialog_alert);
+            iconResource = android.R.drawable.ic_dialog_alert;
         } else {
-            holder.adminView.setImageResource(android.R.drawable.ic_dialog_info);
+            iconResource = android.R.drawable.ic_dialog_info;
         }
+        holder.adminView.setImageResource(iconResource);
     }
 
     @Override

@@ -8,30 +8,40 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.evgeneoskin.banhammer.R;
-import com.evgeneoskin.banhammer.vk.models.Group;
+import com.evgeneoskin.banhammer.vk.models.BannedUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BannedUsersAdapter extends RecyclerView.Adapter<BannedUsersAdapter.ViewHolder> {
 
-    private List<Group> items = new ArrayList<>();
+    static int[] REASONS = new int[] {
+            R.string.ban_reason_other, R.string.ban_reason_spam,
+            R.string.ban_reason_abuse, R.string.ban_reason_obscene,
+            R.string.ban_reason_off_topic,
+};
+    private List<BannedUser> items = new ArrayList<>();
 
     @Override
     public BannedUsersAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.group_item_view, parent, false);
+                .inflate(R.layout.banned_user_item_view, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(BannedUsersAdapter.ViewHolder holder, int position) {
-        Group group = items.get(position);
-        holder.nameView.setText(group.getName());
-        if (group.isAdmin()) {
-            holder.adminView.setImageResource(android.R.drawable.ic_dialog_alert);
+        BannedUser item = items.get(position);
+        holder.nameView.setText(item.getFullName());
+        holder.detailView.setText(renderReason(item));
+        holder.banerView.setText(item.getAdminFullName());
+    }
+
+    public int renderReason(BannedUser item) {
+        if (item.ban_info.reason >= 0 && item.ban_info.reason < REASONS.length) {
+            return REASONS[item.ban_info.reason];
         } else {
-            holder.adminView.setImageResource(android.R.drawable.ic_dialog_info);
+            return R.string.ban_reason_unknown;
         }
     }
 
@@ -40,7 +50,7 @@ public class BannedUsersAdapter extends RecyclerView.Adapter<BannedUsersAdapter.
         return items.size();
     }
 
-    public void setItems(List<Group> items) {
+    public void setItems(List<BannedUser> items) {
         this.items.clear();
         this.items.addAll(items);
         this.notifyDataSetChanged();
@@ -48,12 +58,14 @@ public class BannedUsersAdapter extends RecyclerView.Adapter<BannedUsersAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView nameView;
-        public ImageView adminView;
+        public TextView detailView;
+        public TextView banerView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            adminView = (ImageView) itemView.findViewById(R.id.admin_view);
+            banerView = (TextView) itemView.findViewById(R.id.banner_view);
             nameView = (TextView) itemView.findViewById(R.id.name_view);
+            detailView = (TextView) itemView.findViewById(R.id.detail_view);
         }
     }
 }

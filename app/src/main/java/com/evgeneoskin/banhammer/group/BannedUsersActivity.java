@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import com.evgeneoskin.banhammer.R;
 import com.evgeneoskin.banhammer.vk.VK;
 import com.evgeneoskin.banhammer.vk.VKWrapper;
+import com.evgeneoskin.banhammer.vk.models.BannedUser;
 import com.evgeneoskin.banhammer.vk.models.Group;
 
 import org.androidannotations.annotations.EActivity;
@@ -29,6 +30,7 @@ public class BannedUsersActivity extends AppCompatActivity {
     @ViewById(R.id.items_view)
     RecyclerView recyclerView;
     private BannedUsersAdapter adapter;
+    private Group group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +59,10 @@ public class BannedUsersActivity extends AppCompatActivity {
     }
 
     public void populateMembers() {
-        vk.listBannedUsers()
+        vk.listBannedUsers(group)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Group>>() {
+                .subscribe(new Subscriber<List<BannedUser>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -68,13 +70,13 @@ public class BannedUsersActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
                         Snackbar.make(
-                                recyclerView, R.string.list_group_error, Snackbar.LENGTH_LONG)
+                                recyclerView, R.string.list_banned_user_error, Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
 
                     @Override
-                    public void onNext(List<Group> groups) {
-                        adapter.setItems(groups);
+                    public void onNext(List<BannedUser> items) {
+                        adapter.setItems(items);
                     }
                 });
     }
