@@ -31,11 +31,13 @@ public class BannedUsersActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private BannedUsersAdapter adapter;
     private Group group;
+    private BanUserDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vk = new VKImpl();
+        dialog = new BanUserDialog(this);
 
         Intent intent = getIntent();
         group = Parcels.unwrap(intent.getParcelableExtra("group"));
@@ -55,8 +57,7 @@ public class BannedUsersActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Ban user", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                dialog.show();
             }
         });
     }
