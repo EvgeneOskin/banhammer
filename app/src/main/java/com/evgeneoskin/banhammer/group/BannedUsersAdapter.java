@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.evgeneoskin.banhammer.R;
@@ -33,8 +32,9 @@ public class BannedUsersAdapter extends RecyclerView.Adapter<BannedUsersAdapter.
     public void onBindViewHolder(BannedUsersAdapter.ViewHolder holder, int position) {
         BannedUser item = items.get(position);
         holder.nameView.setText(item.getFullName());
-        holder.detailView.setText(renderReason(item));
-        holder.banerView.setText(item.getAdminFullName());
+        holder.reasonView.setText(renderReason(item));
+        holder.detailView.setText(item.ban_info.comment);
+        holder.adminView.setText(item.getAdminFullName());
     }
 
     public int renderReason(BannedUser item) {
@@ -59,13 +59,15 @@ public class BannedUsersAdapter extends RecyclerView.Adapter<BannedUsersAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView nameView;
         public TextView detailView;
-        public TextView banerView;
+        public TextView reasonView;
+        public TextView adminView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            banerView = (TextView) itemView.findViewById(R.id.banner_view);
+            adminView = (TextView) itemView.findViewById(R.id.banner_view);
             nameView = (TextView) itemView.findViewById(R.id.name_view);
             detailView = (TextView) itemView.findViewById(R.id.detail_view);
+            reasonView = (TextView) itemView.findViewById(R.id.reason_view);
         }
     }
 }
