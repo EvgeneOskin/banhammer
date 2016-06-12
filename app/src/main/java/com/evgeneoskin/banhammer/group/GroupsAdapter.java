@@ -1,5 +1,7 @@
 package com.evgeneoskin.banhammer.group;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +12,19 @@ import android.widget.TextView;
 import com.evgeneoskin.banhammer.R;
 import com.evgeneoskin.banhammer.vk.models.Group;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder> {
 
+    private final Context context;
     private List<Group> items = new ArrayList<>();
+
+    GroupsAdapter(Context context) {
+        this.context = context;
+    }
 
     @Override
     public GroupsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -26,7 +35,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(GroupsAdapter.ViewHolder holder, int position) {
-        Group group = items.get(position);
+        final Group group = items.get(position);
         holder.nameView.setText(group.getName());
         int iconResource;
         if (group.isAdmin()) {
@@ -35,6 +44,18 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
             iconResource = android.R.drawable.ic_dialog_info;
         }
         holder.adminView.setImageResource(iconResource);
+        holder.adminView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBannedUsers(group);
+            }
+        });
+    }
+
+    public void showBannedUsers(Group group){
+        Intent myIntent = new Intent(context, BannedUsersActivity.class);
+        myIntent.putExtra("group", Parcels.wrap(group)); //Optional parameters
+        context.startActivity(myIntent);
     }
 
     @Override

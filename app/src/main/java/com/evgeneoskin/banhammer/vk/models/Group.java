@@ -1,7 +1,8 @@
 package com.evgeneoskin.banhammer.vk.models;
 
-import java.util.List;
+import org.parceler.Parcel;
 
+@Parcel
 public class Group {
     public long id;
     String name;

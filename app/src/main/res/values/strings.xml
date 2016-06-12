@@ -14,5 +14,6 @@
     <string name="ban_reason_abuse">Abuse</string>
     <string name="ban_reason_obscene">Obscene</string>
     <string name="ban_reason_off_topic">Off topic</string>
+    <string name="banned_users_name">Banned users</string>
     <integer name="com_vk_sdk_AppId">5502323</integer>
 </resources>

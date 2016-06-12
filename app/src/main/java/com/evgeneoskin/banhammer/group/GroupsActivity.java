@@ -10,11 +10,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.evgeneoskin.banhammer.R;
 import com.evgeneoskin.banhammer.vk.VK;
-import com.evgeneoskin.banhammer.vk.VKWrapper;
+import com.evgeneoskin.banhammer.vk.VKImpl;
 import com.evgeneoskin.banhammer.vk.models.Group;
-
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
@@ -22,24 +19,29 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-@EActivity(R.layout.activity_main)
 public class GroupsActivity extends AppCompatActivity {
 
     private VK vk;
-    @ViewById(R.id.items_view) RecyclerView recyclerView;
+    RecyclerView recyclerView;
     private GroupsAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vk = new VKWrapper();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new GroupsAdapter();
-        recyclerView.setAdapter(adapter);
+        vk = new VKImpl();
 
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        recyclerView = (RecyclerView) findViewById(R.id.items_view);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new GroupsAdapter(this);
+        recyclerView.setAdapter(adapter);
+
     }
 
     @Override
@@ -51,7 +53,9 @@ public class GroupsActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (!vk.onActivityResult(requestCode, resultCode, data)) {
+        if (vk.onActivityResult(requestCode, resultCode, data)) {
+            this.populateGroups();
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }

@@ -1,8 +1,5 @@
 package com.evgeneoskin.banhammer.vk.models;
 
-/**
- * Created by eoskin on 12.06.16.
- */
 public class User {
     public long id;
     public String first_name;

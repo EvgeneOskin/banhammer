@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".group.GroupsActivity_"
+            android:name=".group.GroupsActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,8 +22,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".group.MembersActivity_"
-            android:label="@string/app_name"
+            android:name=".group.BannedUsersActivity"
+            android:label="@string/banned_users_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name="com.vk.sdk.VKServiceActivity"

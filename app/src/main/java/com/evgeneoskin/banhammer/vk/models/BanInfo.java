@@ -1,5 +1,8 @@
 package com.evgeneoskin.banhammer.vk.models;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class BanInfo {
     public long admin_id;
     public long date;

@@ -10,12 +10,11 @@ import android.support.v7.widget.Toolbar;
 
 import com.evgeneoskin.banhammer.R;
 import com.evgeneoskin.banhammer.vk.VK;
-import com.evgeneoskin.banhammer.vk.VKWrapper;
+import com.evgeneoskin.banhammer.vk.VKImpl;
 import com.evgeneoskin.banhammer.vk.models.BannedUser;
 import com.evgeneoskin.banhammer.vk.models.Group;
 
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -23,21 +22,27 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-@EActivity(R.layout.activity_main)
 public class BannedUsersActivity extends AppCompatActivity {
 
     private VK vk;
-    @ViewById(R.id.items_view)
     RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
     private BannedUsersAdapter adapter;
     private Group group;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vk = new VKWrapper();
+        vk = new VKImpl();
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Intent intent = getIntent();
+        group = Parcels.unwrap(intent.getParcelableExtra("group"));
+
+        setContentView(R.layout.activity_main);
+
+        recyclerView = (RecyclerView) findViewById(R.id.items_view);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
         adapter = new BannedUsersAdapter();
         recyclerView.setAdapter(adapter);
 
