@@ -1,21 +1,20 @@
-package com.evgeneoskin.banhammer;
+package com.evgeneoskin.banhammer.group;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
+import com.evgeneoskin.banhammer.R;
 import com.evgeneoskin.banhammer.vk.VK;
 import com.evgeneoskin.banhammer.vk.VKWrapper;
 import com.evgeneoskin.banhammer.vk.models.Group;
+
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
@@ -23,45 +22,30 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity {
+@EActivity(R.layout.activity_main)
+public class BannedUsersActivity extends AppCompatActivity {
 
     private VK vk;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
-    private GroupAdapter adapter;
+    @ViewById(R.id.items_view)
+    RecyclerView recyclerView;
+    private BannedUsersAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         vk = new VKWrapper();
 
-        setContentView(R.layout.activity_main);
-
-        recyclerView = (RecyclerView) findViewById(R.id.groups_view);
-
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        adapter = new GroupAdapter();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new BannedUsersAdapter();
         recyclerView.setAdapter(adapter);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(@NonNull View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
     public void onStart() {
-        vk.login(this);
-        this.populateGroups();
+        this.populateMembers();
         super.onStart();
     }
 
@@ -72,25 +56,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void populateGroups() {
-        vk.listGroups()
+    public void populateMembers() {
+        vk.listBannedUsers()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Group>>() {
@@ -107,8 +74,9 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(List<Group> groups) {
-                        adapter.setGroups(groups);
+                        adapter.setItems(groups);
                     }
                 });
     }
 }
+

@@ -42,7 +42,7 @@ public class VKWrapper implements VK {
     }
 
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-        boolean handled = VKSdk.onActivityResult(
+        return VKSdk.onActivityResult(
                 requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
                     @Override
                     public void onResult(VKAccessToken res) {
@@ -54,6 +54,5 @@ public class VKWrapper implements VK {
                     }
                 }
         );
-        return handled;
     }
 }

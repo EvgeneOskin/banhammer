@@ -1,32 +1,32 @@
-package com.evgeneoskin.banhammer;
+package com.evgeneoskin.banhammer.group;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.evgeneoskin.banhammer.R;
 import com.evgeneoskin.banhammer.vk.models.Group;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> {
+public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder> {
 
-    private List<Group> groups = new ArrayList<>();
+    private List<Group> items = new ArrayList<>();
 
     @Override
-    public GroupAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GroupsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.group_item_view, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(GroupAdapter.ViewHolder holder, int position) {
-        Group group = groups.get(position);
+    public void onBindViewHolder(GroupsAdapter.ViewHolder holder, int position) {
+        Group group = items.get(position);
         holder.nameView.setText(group.getName());
         if (group.isAdmin()) {
             holder.adminView.setImageResource(android.R.drawable.ic_dialog_alert);
@@ -37,12 +37,12 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return groups.size();
+        return items.size();
     }
 
-    public void setGroups(List<Group> groups) {
-        this.groups.clear();
-        this.groups.addAll(groups);
+    public void setItems(List<Group> items) {
+        this.items.clear();
+        this.items.addAll(items);
         this.notifyDataSetChanged();
     }
 
