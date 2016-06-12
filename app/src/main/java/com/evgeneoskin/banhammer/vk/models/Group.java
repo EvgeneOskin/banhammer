@@ -1,9 +1,10 @@
 package com.evgeneoskin.banhammer.vk.models;
 
-import java.util.List;
+import org.parceler.Parcel;
 
+@Parcel
 public class Group {
-    long id;
+    public long id;
     String name;
     String screen_name;
     int is_closed;
