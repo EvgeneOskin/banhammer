@@ -21,5 +21,7 @@
     <string name="user_edit_view_hint">vk.com username</string>
     <string name="comment_edit_view_hint">Extra Comment</string>
     <string name="comment_visibility_hint">Show comment to the user</string>
+    <string name="ban_user_error">Error when ban user</string>
+    <string name="ban_user_success">User banned</string>
     <integer name="com_vk_sdk_AppId">5502323</integer>
 </resources>

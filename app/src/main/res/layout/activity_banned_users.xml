@@ -21,6 +21,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/user_edit_view"
+        android:hint="@string/user_edit_view_hint"
+        android:layout_alignParentTop="true"/>
+
     <android.support.v7.widget.RecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
