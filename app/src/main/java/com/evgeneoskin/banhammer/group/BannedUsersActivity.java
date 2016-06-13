@@ -16,7 +16,7 @@ import com.evgeneoskin.banhammer.vk.VK;
 import com.evgeneoskin.banhammer.vk.VKImpl;
 import com.evgeneoskin.banhammer.vk.models.BannedUser;
 import com.evgeneoskin.banhammer.vk.models.Group;
-import com.evgeneoskin.banhammer.vk.models.ResponseUserItems;
+import com.evgeneoskin.banhammer.vk.models.ResponseResolveScreenName;
 
 import org.parceler.Parcels;
 
@@ -62,7 +62,7 @@ public class BannedUsersActivity extends AppCompatActivity {
                 vk.findUser(usernameView.getText().toString())
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<List<ResponseUserItems>>() {
+                        .subscribe(new Subscriber<ResponseResolveScreenName>() {
                             @Override
                             public void onCompleted() {
                             }
@@ -70,15 +70,20 @@ public class BannedUsersActivity extends AppCompatActivity {
                             @Override
                             public void onError(Throwable e) {
                                 Snackbar.make(
-                                        recyclerView, R.string.list_banned_user_error, Snackbar.LENGTH_LONG)
+                                        recyclerView, R.string.find_user_error, Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
                             }
 
                             @Override
-                            public void onNext(List<ResponseUserItems> items) {
-                                int userId = 1;
-                                BanUserDialog dialog = new BanUserDialog(BannedUsersActivity.this, vk, group, userId);
-                                dialog.show();
+                            public void onNext(ResponseResolveScreenName resolved) {
+                                long userId = resolved.response.object_id;
+                                String type = resolved.response.type;
+                                if (!type.equals("user") || userId == 0) {
+                                    onError(new Throwable());
+                                } else {
+                                    BanUserDialog dialog = new BanUserDialog(BannedUsersActivity.this, vk, group, userId);
+                                    dialog.show();
+                                }
                             }
                         });
             }
