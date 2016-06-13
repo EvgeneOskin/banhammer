@@ -17,7 +17,7 @@ import org.parceler.Parcels;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder> {
+class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder> {
 
     private final Context context;
     private List<Group> items = new ArrayList<>();

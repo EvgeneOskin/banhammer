@@ -5,10 +5,13 @@ import android.content.Intent;
 
 import com.evgeneoskin.banhammer.json.GSONSerializer;
 import com.evgeneoskin.banhammer.json.JSONSerializer;
+import com.evgeneoskin.banhammer.vk.models.BanInfo;
+import com.evgeneoskin.banhammer.vk.models.BanUserResult;
 import com.evgeneoskin.banhammer.vk.models.BannedUser;
 import com.evgeneoskin.banhammer.vk.models.Group;
 import com.evgeneoskin.banhammer.vk.models.ResponseBannedItems;
 import com.evgeneoskin.banhammer.vk.models.ResponseGroupItems;
+import com.evgeneoskin.banhammer.vk.models.ResponseResolveScreenName;
 import com.evgeneoskin.banhammer.vk.rx.FuncResponseDeserialize;
 import com.evgeneoskin.banhammer.vk.rx.ItemsRetriever;
 import com.vk.sdk.VKAccessToken;
@@ -51,6 +54,30 @@ public class VKImpl implements VK {
         return Observable.create(new RequestOnSubscribe(request))
                 .map(new FuncResponseDeserialize(serializer, ResponseBannedItems.class))
                 .map(new ItemsRetriever<BannedUser>());
+    }
+
+    @Override
+    public Observable<ResponseResolveScreenName> findUser(String screenName) {
+        final VKParameters parameters = new VKParameters();
+        parameters.put("screen_name", screenName);
+        final VKRequest request = VKApi.utils().resolveScreenName(parameters);
+        return Observable.create(new RequestOnSubscribe(request))
+                .map(new FuncResponseDeserialize(serializer, ResponseResolveScreenName.class));
+    }
+
+    @Override
+    public Observable<BanUserResult> banUser(Group group, long userId, BanInfo banInfo) {
+        final VKParameters parameters = new VKParameters();
+        parameters.put("group_id", group.id);
+        parameters.put("user_id", userId);
+        parameters.put("end_date", banInfo.end_date);
+        parameters.put("reason", banInfo.reason);
+        parameters.put("comment", banInfo.comment);
+
+        final VKRequest request = VKApi.groups().banUser(parameters);
+        return Observable.create(new RequestOnSubscribe(request))
+                .map(new FuncResponseDeserialize(serializer, BanUserResult.class));
+
     }
 
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {

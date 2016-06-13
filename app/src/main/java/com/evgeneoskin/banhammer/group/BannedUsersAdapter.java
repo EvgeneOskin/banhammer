@@ -12,13 +12,13 @@ import com.evgeneoskin.banhammer.vk.models.BannedUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BannedUsersAdapter extends RecyclerView.Adapter<BannedUsersAdapter.ViewHolder> {
+class BannedUsersAdapter extends RecyclerView.Adapter<BannedUsersAdapter.ViewHolder> {
 
     static int[] REASONS = new int[] {
             R.string.ban_reason_other, R.string.ban_reason_spam,
             R.string.ban_reason_abuse, R.string.ban_reason_obscene,
             R.string.ban_reason_off_topic,
-};
+    };
     private List<BannedUser> items = new ArrayList<>();
 
     @Override

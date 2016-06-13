@@ -9,11 +9,20 @@
     <string name="banned_user_entry_banner">banned user Admin name</string>
     <string name="banned_user_entry_detail">Banned user entry ban info</string>
     <string name="ban_reason_unknown">Unknown ban reason</string>
-    <string name="ban_reason_other">Other ban reason</string>
+    <string name="ban_reason_other">Other</string>
     <string name="ban_reason_spam">Spam</string>
     <string name="ban_reason_abuse">Abuse</string>
     <string name="ban_reason_obscene">Obscene</string>
     <string name="ban_reason_off_topic">Off topic</string>
     <string name="banned_users_name">Banned users</string>
+    <string name="ban_user_dialog_title">Ban user</string>
+    <string name="ban_user_dialog_agree">Ban</string>
+    <string name="ban_user_dialog_cancel">Cancel</string>
+    <string name="user_edit_view_hint">vk.com username</string>
+    <string name="comment_edit_view_hint">Extra Comment</string>
+    <string name="comment_visibility_hint">Show comment to the user</string>
+    <string name="ban_user_error">Error when ban user</string>
+    <string name="ban_user_success">User banned</string>
+    <string name="find_user_error">Can not find user</string>
     <integer name="com_vk_sdk_AppId">5502323</integer>
 </resources>

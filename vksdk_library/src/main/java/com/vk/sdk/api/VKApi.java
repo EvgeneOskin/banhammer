@@ -28,6 +28,7 @@ import com.vk.sdk.api.methods.VKApiGroups;
 import com.vk.sdk.api.methods.VKApiMessages;
 import com.vk.sdk.api.methods.VKApiPhotos;
 import com.vk.sdk.api.methods.VKApiUsers;
+import com.vk.sdk.api.methods.VKApiUtils;
 import com.vk.sdk.api.methods.VKApiVideo;
 import com.vk.sdk.api.methods.VKApiWall;
 import com.vk.sdk.api.photo.VKUploadAlbumPhotoRequest;
@@ -41,6 +42,13 @@ import java.io.File;
  Provides access for API parts.
  */
 public class VKApi {
+    /**
+     * https://vk.com/dev/users
+     * Returns object for preparing requests to users part of API
+     */
+    public static VKApiUtils utils() {
+        return new VKApiUtils();
+    }
     /**
      * https://vk.com/dev/users
      * Returns object for preparing requests to users part of API
